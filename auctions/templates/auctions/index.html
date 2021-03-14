@@ -3,5 +3,21 @@
 {% block body %}
     <h2>Active Listings</h2>
 
-    TODO
+    {% for listing in listings%}
+
+
+      <div id ="container-fluid">
+        <div id="floated-imgs">
+          <img src="{{listing.image_link}}" alt="Profile Picture" width="225"/>
+        </div>
+            <p style="text-align:center;"> <strong>{{listing.title}}</strong></p>
+            <p style="text-align:center;">{{listing.description}}</p>
+            <p style="text-align:center;"><strong> Price: </strong>{{listing.start_value}}€</p>
+            <p style="text-align:center;">Created {{listing.created_at}}</p>
+
+
+      </div>
+
+    {% endfor %}
+
 {% endblock %}

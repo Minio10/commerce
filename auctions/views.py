@@ -3,12 +3,27 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django import forms
 
-from .models import User
+from .models import User, Listing, Bid, Comment
+
+class NewListingForm(forms.Form):
+
+        title = forms.CharField(label = "Title")
+        desc = forms.CharField(label = "Description")
+        init_bid = forms.IntegerField(label = "Initial Price")
+        url = forms.CharField(label = "Listing Image URL")
+        category = forms.CharField(label ="Category")
+
+
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+
+    # Returns all listings stored on the DB
+    return render(request, "auctions/index.html",{
+        "listings": Listing.objects.all()
+    })
 
 
 def login_view(request):
@@ -61,3 +76,36 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+#Sends the user to the page where he can create a new Listing
+def create(request):
+
+    return render(request,"auctions/create_listing.html",{
+        "form":NewListingForm()
+    })
+
+def add_listing(request):
+
+    if request.method == "POST":
+        form = NewListingForm(request.POST)
+
+        # Verifies if the form is filled in the correct way
+        if form.is_valid():
+            title = form.cleaned_data["title"]
+            desc = form.cleaned_data["desc"]
+            init_bid = form.cleaned_data["init_bid"]
+            url = form.cleaned_data["url"]
+            category = form.cleaned_data["category"]
+
+        #Adds the Listing to the DB
+        new_listing = Listing()
+        new_listing.user = request.user
+        new_listing.title = title
+        new_listing.description = desc
+        new_listing.category = category
+        new_listing.image_link = url
+        new_listing.start_value = init_bid
+        new_listing.save()
+
+        #Redirects the user to the Index Template
+        return HttpResponseRedirect(reverse("index"))
