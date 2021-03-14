@@ -9,11 +9,31 @@ from .models import User, Listing, Bid, Comment
 
 class NewListingForm(forms.Form):
 
-        title = forms.CharField(label = "Title")
-        desc = forms.CharField(label = "Description")
-        init_bid = forms.IntegerField(label = "Initial Price")
-        url = forms.CharField(label = "Listing Image URL")
-        category = forms.CharField(label ="Category")
+        title = forms.CharField(label = "Title",widget = forms.TextInput(
+            attrs = {
+                'class': 'form-control'
+            }
+        ))
+        desc = forms.CharField(label = "Description",widget = forms.TextInput(
+            attrs = {
+                'class': 'form-control'
+            }
+        ))
+        init_bid = forms.IntegerField(label = "Initial Price",widget = forms.TextInput(
+            attrs = {
+                'class': 'form-control'
+            }
+        ))
+        url = forms.CharField(label = "Listing Image URL",widget = forms.TextInput(
+            attrs = {
+                'class': 'form-control'
+            }
+        ))
+        category = forms.CharField(label ="Category",widget = forms.TextInput(
+            attrs = {
+                'class': 'form-control'
+            }
+        ))
 
 
 
