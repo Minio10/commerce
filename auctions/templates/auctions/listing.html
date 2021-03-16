@@ -1,0 +1,22 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    {{listing.title}}
+{% endblock %}
+
+{% block body %}
+
+  <h1> {{listing.title}} </h1>
+
+
+  <div id="floated-imgs">
+    <img src="{{listing.image_link}}"  width="250"/>
+    {% if flag_bid == 0%}
+        <p ><strong> Price: </strong>{{listing.start_value}}€</p>
+    {% endif %}
+    <p ><strong> Description: </strong> {{listing.description}}</p>
+  </div>
+
+
+
+{% endblock %}

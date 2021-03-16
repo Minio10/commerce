@@ -6,14 +6,14 @@
     {% for listing in listings%}
 
 
-      <div id ="container-fluid">
+      <div id ="container-fluid" style="text-align:center;">
         <div id="floated-imgs">
           <img src="{{listing.image_link}}" alt="Profile Picture" width="225"/>
         </div>
-            <p style="text-align:center;"> <strong>{{listing.title}}</strong></p>
-            <p style="text-align:center;">{{listing.description}}</p>
-            <p style="text-align:center;"><strong> Price: </strong>{{listing.start_value}}€</p>
-            <p style="text-align:center;">Created {{listing.created_at}}</p>
+            <a  href="{% url 'viewListing' listing.id%}">{{listing.title}}</a>
+            <p >{{listing.description}}</p>
+            <p ><strong> Price: </strong>{{listing.start_value}}€</p>
+            <p >Created {{listing.created_at}}</p>
 
 
       </div>

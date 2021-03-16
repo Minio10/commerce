@@ -129,3 +129,19 @@ def add_listing(request):
 
         #Redirects the user to the Index Template
         return HttpResponseRedirect(reverse("index"))
+
+def viewListing(request,pk):
+
+    flag_bid = 0
+
+    # returns the listing selected
+    listing = Listing.objects.get(id=pk)
+
+    # returns the list of bids made on that specific listing
+    bid_List = Bid.objects.filter(item = pk)
+
+    #checks if any bid was made
+    if not bid_List :
+        return render(request, "auctions/listing.html",{
+            "listing":listing,"flag_bid":flag_bid
+        })
