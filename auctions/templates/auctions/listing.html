@@ -11,10 +11,31 @@
 
   <div id="floated-imgs">
     <img src="{{listing.image_link}}"  width="250"/>
-    {% if flag_bid == 0%}
-        <p ><strong> Price: </strong>{{listing.start_value}}€</p>
-    {% endif %}
-    <p ><strong> Description: </strong> {{listing.description}}</p>
+        <p><strong> Price: </strong>{{listing.start_value}}€</p>
+        {{num_bids}} bid(s) so far.
+
+        {% if listing.flag_active == 1 %}
+
+          <p> The winner of the listing is {{listing.winner}} </p>
+
+        {% elif user.get_username == listing.user.username %}
+
+          <a  href="{% url 'close_auction' listing.id %}">Close Listing</a>
+
+
+        {% else %}
+        <form action="{% url 'placeBid' %}" method="post">
+            {% csrf_token %}
+            {{form}}
+            <br>
+          <input class="btn btn-primary" type="submit" value="Place Bid">
+          <input type="hidden" name="item_id" value="{{listing.id}}">
+        </form>
+
+       {% endif %}
+
+
+
   </div>
 
 

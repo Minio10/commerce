@@ -17,7 +17,8 @@ class Listing(models.Model):
     category = models.CharField(max_length=64)
     image_link = models.CharField(max_length=200, default=None, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    flag_active = models.IntegerField(default = 0) # 0 - for active 1 - closed auction
+    winner = models.CharField(max_length=50, null = True, blank = True,default = None)
 
 class Bid(models.Model):
 
