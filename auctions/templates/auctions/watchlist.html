@@ -1,0 +1,24 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+  Watchlist
+{% endblock %}
+
+
+
+{% block body %}
+
+<h1> Watchlist </h1>
+
+  {% if watchlist.count == 0 %}
+
+  You don't have items in your Watchlist
+  {% else %}
+  <ul>
+      {% for w in watchlist %}
+          <li><a href="{% url 'viewListing' w.item.id %}">{{ w.item.title }}</a></li>
+      {% endfor %}
+  </ul>
+  {% endif %}
+
+{% endblock %}

@@ -8,9 +8,18 @@
 
   <h1> {{listing.title}} </h1>
 
+  <div style ="text-align:center">
+  {% if watchlist.count == 0 %}
+    <a  href="{% url 'add_watchlist' listing.id %}">Add to Watchlist</a>
+
+  {% else %}
+  <a  href="{% url 'remove_watchlist' listing.id %}">Remove from Watchlist</a>
+  </div>
+  {% endif %}
+
 
   <div id="floated-imgs">
-    <img src="{{listing.image_link}}"  width="250"/>
+    <img src="{{listing.image_link}}"  width="275" />
         <p><strong> Price: </strong>{{listing.start_value}}€</p>
         {{num_bids}} bid(s) so far.
 
@@ -32,25 +41,34 @@
           <input type="hidden" name="item_id" value="{{listing.id}}">
         </form>
       </div>
-
-      <div id ="ola" style="text-align:center;">
+      <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
         <h2> Details </h2>
           <ul>
             <li>Listed by: {{listing.user.username}}</li>
           </ul>
-          {% if watchlist.count == 0 %}
-            <a  href="{% url 'add_watchlist' listing.id %}">Add to Watchlist</a>
 
-          {% else %}
-          <a  href="{% url 'remove_watchlist' listing.id %}">Remove from Watchlist</a>
-          {% endif %}
+          <br><br><br><br>
+          <h3> Comments </h3>
+          <ul>
+              {% for c in comments %}
+                  <li>{{c.comment}} -<strong> {{c.user.username}}</strong></li>
+              {% endfor %}
+          </ul>
 
-      </div>
        {% endif %}
 
 
+       <div style = "text-align:left">
+         <form action="{% url 'addComment' %}" method="post">
+             {% csrf_token %}
+             {{c_form}}
+             <br>
+           <input class="btn btn-primary" type="submit" value="Submit Comment">
+           <input type="hidden" name="item_id" value="{{listing.id}}">
 
+         </form>
+       </div>
 
 
 

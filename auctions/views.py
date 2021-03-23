@@ -44,6 +44,16 @@ class NewBidForm(forms.Form):
     ))
     item_id = forms.IntegerField(widget = forms.HiddenInput())
 
+class NewCommentForm(forms.Form):
+
+    comment = forms.CharField(label = "Comment",widget = forms.TextInput(
+        attrs = {
+            'class': 'form-control'
+        }
+    ))
+    item_id = forms.IntegerField(widget = forms.HiddenInput())
+
+
 
 
 def index(request):
@@ -152,15 +162,14 @@ def viewListing(request,pk):
     #checks if the item is already on the users watchlist
     watchlist = Watchlist.objects.filter(user = request.user, item = pk)
 
+    #returns the list of comments made on this listing
+    comments = Comment.objects.filter(item = listing)
+
 
 
     return render(request, "auctions/listing.html",{
-        "listing":listing,"form":NewBidForm(),"num_bids":len(bid_List),"watchlist":watchlist
+        "listing":listing,"form":NewBidForm(),"num_bids":len(bid_List),"watchlist":watchlist,"comments":comments,"c_form":NewCommentForm()
     })
-
-
-
-
 
 
 def placeBid(request):
@@ -259,4 +268,35 @@ def remove_watchlist(request,item_id):
 
 def watchlist(request):
 
-    return 0
+    #Returns all items from a userś watchlist
+    watchlist = Watchlist.objects.filter(user = request.user)
+    return render(request, "auctions/watchlist.html",{
+        "watchlist":watchlist
+    })
+
+def addComment(request):
+
+
+
+    if request.method == "POST":
+        form = NewCommentForm(request.POST)
+
+        #Saves the comment on the DB
+        if form.is_valid():
+            opinion = form.cleaned_data["comment"]
+            item_id = form.cleaned_data["item_id"]
+
+            # returns the listing that was commented
+            listing = Listing.objects.get(id=item_id)
+            
+            c = Comment()
+            c.comment = opinion
+            c.user = request.user
+            c.item = listing
+
+            c.save()
+            return redirect("viewListing",item_id)
+
+    return render(request,"auctions/error.html",{
+        "message": "Some problem happened while you submited your Comment"
+    })
