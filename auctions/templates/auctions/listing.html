@@ -31,12 +31,29 @@
           <input class="btn btn-primary" type="submit" value="Place Bid">
           <input type="hidden" name="item_id" value="{{listing.id}}">
         </form>
+      </div>
 
+      <div id ="ola" style="text-align:center;">
+
+        <h2> Details </h2>
+          <ul>
+            <li>Listed by: {{listing.user.username}}</li>
+          </ul>
+          {% if watchlist.count == 0 %}
+            <a  href="{% url 'add_watchlist' listing.id %}">Add to Watchlist</a>
+
+          {% else %}
+          <a  href="{% url 'remove_watchlist' listing.id %}">Remove from Watchlist</a>
+          {% endif %}
+
+      </div>
        {% endif %}
 
 
 
-  </div>
+
+
+
 
 
 

@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django import forms
 
-from .models import User, Listing, Bid, Comment
+from .models import User, Listing, Bid, Comment, Watchlist
 
 class NewListingForm(forms.Form):
 
@@ -149,10 +149,13 @@ def viewListing(request,pk):
     # returns the list of bids made on that specific listing
     bid_List = Bid.objects.filter(item = pk)
 
+    #checks if the item is already on the users watchlist
+    watchlist = Watchlist.objects.filter(user = request.user, item = pk)
+
 
 
     return render(request, "auctions/listing.html",{
-        "listing":listing,"form":NewBidForm(),"num_bids":len(bid_List)
+        "listing":listing,"form":NewBidForm(),"num_bids":len(bid_List),"watchlist":watchlist
     })
 
 
@@ -208,3 +211,52 @@ def close_auction(request,item_id):
     Listing.objects.filter(pk=item_id).update(winner=highest_bid.user.username)
 
     return redirect("viewListing",item_id)
+
+
+
+
+
+def add_watchlist(request,item_id):
+
+    # returns the listing selected
+    listing = Listing.objects.get(id=item_id)
+
+    #Verifies if the item already exists on that person's watchlist
+    try:
+        w_item = Watchlist.objects.get(item = listing, user = request.user)
+
+    except:
+
+        w_item = None
+
+    #If it doesnt exist, its added to the DB
+    if not w_item:
+
+        watch_item = Watchlist()
+        watch_item.user = request.user
+        watch_item.item = listing
+        watch_item.save()
+
+        return redirect("viewListing",item_id)
+
+def remove_watchlist(request,item_id):
+
+    # returns the listing selected
+    listing = Listing.objects.get(id=item_id)
+
+    #Removing the item from the user's Watchlist
+    try:
+        w_item = Watchlist.objects.get(item = listing, user = request.user)
+
+    except:
+
+        w_item = None
+
+    w_item.delete()
+
+    return redirect("viewListing",item_id)
+
+
+def watchlist(request):
+
+    return 0
