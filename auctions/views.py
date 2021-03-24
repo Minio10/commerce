@@ -60,7 +60,7 @@ def index(request):
 
     # Returns all active listings stored on the DB
     return render(request, "auctions/index.html",{
-        "listings": Listing.objects.filter(flag_active = 0)
+        "listings": Listing.objects.filter(flag_active = 0),"message": "Active Listings"
     })
 
 
@@ -276,8 +276,6 @@ def watchlist(request):
 
 def addComment(request):
 
-
-
     if request.method == "POST":
         form = NewCommentForm(request.POST)
 
@@ -288,7 +286,7 @@ def addComment(request):
 
             # returns the listing that was commented
             listing = Listing.objects.get(id=item_id)
-            
+
             c = Comment()
             c.comment = opinion
             c.user = request.user
@@ -299,4 +297,28 @@ def addComment(request):
 
     return render(request,"auctions/error.html",{
         "message": "Some problem happened while you submited your Comment"
+    })
+
+def categories(request):
+
+    items = Listing.objects.filter(flag_active = 0)
+    #storing all categories
+    categories = []
+
+    for item in items:
+        if item.category not in categories:
+            categories.append(item.category)
+
+    return render(request,"auctions/categories.html",{
+        "categories":categories
+    })
+
+def viewListingCategories(request, category):
+
+    #selects all active listings with that specific category
+    items = Listing.objects.filter(category = category)
+    items = items.filter(flag_active = 0)
+
+    return render(request,"auctions/index.html",{
+        "listings":items,"message": category + " Active Listings"
     })

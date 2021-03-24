@@ -18,48 +18,57 @@
   {% endif %}
 
 
+
   <div id="floated-imgs">
-    <img src="{{listing.image_link}}"  width="275" />
+    <img src="{{listing.image_link}}"  width="280" />
         <p><strong> Price: </strong>{{listing.start_value}}€</p>
         {{num_bids}} bid(s) so far.
+  </div>
 
-        {% if listing.flag_active == 1 %}
-
-          <p> The winner of the listing is {{listing.winner}} </p>
-
-        {% elif user.get_username == listing.user.username %}
-
-          <a  href="{% url 'close_auction' listing.id %}">Close Listing</a>
+  <div style ="text-align:center">
 
 
-        {% else %}
-        <form action="{% url 'placeBid' %}" method="post">
-            {% csrf_token %}
-            {{form}}
-            <br>
-          <input class="btn btn-primary" type="submit" value="Place Bid">
-          <input type="hidden" name="item_id" value="{{listing.id}}">
-        </form>
-      </div>
-      <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
+  {% if listing.flag_active == 1 %}
+
+    <p> The winner of the listing is {{listing.winner}} </p>
+
+  {% elif user.get_username == listing.user.username %}
+
+    <a  href="{% url 'close_auction' listing.id %}">Close Listing</a>
+
+
+  {% else %}
+  <form action="{% url 'placeBid' %}" method="post">
+      {% csrf_token %}
+      {{form}}
+      <br>
+    <input class="btn btn-primary" type="submit" value="Place Bid">
+    <input type="hidden" name="item_id" value="{{listing.id}}">
+  </form>
+</div>
+
+
+      <br><br>
+      {% endif %}
+      <div style = "text-align:left">
         <h2> Details </h2>
           <ul>
             <li>Listed by: {{listing.user.username}}</li>
           </ul>
 
-          <br><br><br><br>
-          <h3> Comments </h3>
+          <br>
+          <h2> Comments </h2>
           <ul>
               {% for c in comments %}
                   <li>{{c.comment}} -<strong> {{c.user.username}}</strong></li>
               {% endfor %}
           </ul>
 
-       {% endif %}
 
 
-       <div style = "text-align:left">
+
+
          <form action="{% url 'addComment' %}" method="post">
              {% csrf_token %}
              {{c_form}}
